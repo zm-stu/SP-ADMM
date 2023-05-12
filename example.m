@@ -25,8 +25,8 @@ plot(anchor(:,1),anchor(:,2),'sk','MarkerFaceColor','r','MarkerSize', 9);
 gplot(dd_error,[agent;anchor],'k-');
 box on
 grid on
-ylabel('Y[m]','FontSize',25)  %'\bf'�ǼӴֵ���˼
-xlabel('X[m]','FontSize',25)  %'\bf'�ǼӴֵ���˼
+ylabel('Y[m]','FontSize',25)  %'\bf'是加粗的意思
+xlabel('X[m]','FontSize',25)  %'\bf'是加粗的意思
 title('Sensor Network')
 hl=legend('agent','anchor');
 set(hl,'Orientation','horizon')
@@ -39,23 +39,15 @@ a0 = 0;
 c=0.14;
 rho=c;
 step = 200; 
-N_MC = 20; 
 n_scale = 1; 
-RMSE_SP_ADMM=zeros(step,N_MC);
-
-for i_MC = 1:N_MC
-    rng(i_MC)
-    x0 =[n_scale.*unifrnd(-1,1,n_fix,2);anchor];
-    rmse_sp = sp_admm(agent,sum_link,link,c,rho,u0,a0,x0,step,n_fix,m,dd_error);
-    RMSE_SP_ADMM(:,i_MC) = rmse_sp;
-end
-
-mean_RMSE_SP_ADMM=mean(RMSE_SP_ADMM,2);
-
+x0 =[n_scale.*unifrnd(-1,1,n_fix,2);anchor];
+%% algorithm estimate-----------------------------------
+rmse_sp = sp_admm(agent,sum_link,link,c,rho,u0,a0,x0,step,n_fix,m,dd_error);
+%% result--------------------------------
 colo1=[246,83,20]./255;
 ttp=[1,20:20:step];
 figure()
-semilogy(1:step,mean_RMSE_SP_ADMM,'-s','Color',colo1,'MarkerIndices',ttp,'MarkerFaceColor',colo1,'LineWidth',2,'MarkerSize',7)
+semilogy(1:step,rmse_sp,'-s','Color',colo1,'MarkerIndices',ttp,'MarkerFaceColor',colo1,'LineWidth',2,'MarkerSize',7)
 grid on
 legend('SP-ADMM')
 xlabel('Iteration Number','FontSize',25)
